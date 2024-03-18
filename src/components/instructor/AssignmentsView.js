@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {useLocation} from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import Button from "@mui/material/Button";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {confirmAlert} from "react-confirm-alert";
 import AssignmentUpdate from './AssignmentUpdate';
 import AssignmentAdd from "./AssignmentAdd";
 import {SERVER_URL} from "../../Constants";
+
 
 // instructor views assignments for their section
 // use location to get the section value 
@@ -23,8 +24,9 @@ const AssignmentsView = (props) => {
 
     const location = useLocation();
     const {secNo, courseId, secId} = location.state;
+    //const secNo = 8; //(MB for testing)
 
-    const headers = ['Assignment Id', 'Title', 'Due Date', '', ''];
+    const headers = ['Assignment Id', 'Title', 'Due Date', '', '', ''];
 
     const fetchAssignments = async () => {
         if (!secNo) return;
@@ -64,9 +66,6 @@ const AssignmentsView = (props) => {
 
     const doDelete = (event) => {
         const row_index = event.target.parentNode.parentNode.rowIndex -1;
-        // const assignments_copy = assignments.filter((assignment, idx) => idx!==row_index);
-        // setAssignments(assignments_copy);
-        // setMessage('Assignment Deleted');
         deleteAssignment(assignments[row_index].id);
     }
 
@@ -90,12 +89,6 @@ const AssignmentsView = (props) => {
             setMessage("network error: " + err);
         }
     }
-
-    // const onSave = (assignment) => {
-    //     const assignment_copy = assignments.map((a) => (a.id===assignment.id) ? assignment : a);
-    //     setAssignments(assignment_copy);
-    //     setMessage("Assignment saved");
-    // }
 
     const onSave = async (assignment) => {
         try {
@@ -160,10 +153,11 @@ const AssignmentsView = (props) => {
                            <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
                            <td><Button onClick={deleteAlert}>Delete</Button></td>
                        </tr>
+
                    )}
                </tbody>
            </table>
-            <AssignmentAdd save={addAssignment()} />
+            <AssignmentAdd save={addAssignment} />
         </>
     );
 }
