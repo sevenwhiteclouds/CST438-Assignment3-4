@@ -5,6 +5,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import {confirmAlert} from "react-confirm-alert";
 import AssignmentUpdate from './AssignmentUpdate';
 import AssignmentAdd from "./AssignmentAdd";
+import AssignmentGrade from "./AssignmentGrade";
 import {SERVER_URL} from "../../Constants";
 
 
@@ -22,9 +23,12 @@ const AssignmentsView = (props) => {
 
     const [message, setMessage] = useState('');
 
+    const [showGrades, setShowGrades] = useState(false);
+
+    const [currentAssignment, setCurrentAssignment] = useState(null);
+
     const location = useLocation();
     const {secNo} = location.state;
-    //const secNo = 8; //(MB for testing)
 
     const headers = ['Assignment Id', 'Title', 'Due Date', '', '', ''];
 
@@ -135,29 +139,44 @@ const AssignmentsView = (props) => {
     }
      
     return(
-        <> 
-           <h3> Assignment Catalog </h3>
-           <h4>{message}</h4>
-           <table className="Center">
-               <thead>
-                   <tr>
-                       {headers.map((h,idx) => <th key={idx}>{h}</th>)}
-                   </tr>
-               </thead>
-               <tbody>
-                   {assignments.map((assignment) =>
-                       <tr key={assignment.id}>
-                           <td>{assignment.id}</td>
-                           <td>{assignment.title}</td>
-                           <td>{assignment.dueDate}</td>
-                           <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
-                           <td><Button onClick={deleteAlert}>Delete</Button></td>
-                       </tr>
+        <>
+            <h3> Assignment Catalog </h3>
+            <h4>{message}</h4>
 
-                   )}
-               </tbody>
-           </table>
-            <AssignmentAdd save={addAssignment} />
+            {showGrades
+                ? <div>
+                    <Button onClick={() => {
+                        setShowGrades(!showGrades);
+                        setCurrentAssignment(null);
+                    }}>Back</Button>
+                    <AssignmentGrade assignment={currentAssignment}/>
+                </div>
+                : <div><table className="Center">
+                    <thead>
+                    <tr>
+                        {headers.map((h,idx) => <th key={idx}>{h}</th>)}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {assignments.map((assignment) =>
+                        <tr key={assignment.id}>
+                            <td>{assignment.id}</td>
+                            <td>{assignment.title}</td>
+                            <td>{assignment.dueDate}</td>
+                            <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
+                            <td><Button onClick={deleteAlert}>Delete</Button></td>
+                            {/*<td><AssignmentGrade assignment={assignment}/></td>*/}
+                            <td><Button onClick={() => {
+                                setShowGrades(!showGrades);
+                                setCurrentAssignment(assignment);
+                            }}>Show Grades</Button></td>
+                        </tr>
+
+                    )}
+                    </tbody>
+                </table>
+                <AssignmentAdd save={addAssignment} /> </div>
+            }
         </>
     );
 }
