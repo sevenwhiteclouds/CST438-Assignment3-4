@@ -12,6 +12,7 @@ import {confirmAlert} from "react-confirm-alert";
 // issue a DELETE with URL /enrollment/{enrollmentId}
 
 // TODO: Consider reducing how much info is given.
+// TODO: When a class has a grade, it will not drop.
 
 const ScheduleView = (props) => {
 
@@ -28,28 +29,42 @@ const ScheduleView = (props) => {
     let [isDataFetched, setIsDataFetched] = useState(false);
 
     const fetchSchedule = async () => {
-        // Checks for empty params
-        if (query.year === '' || query.semester === '' || query.studentId === '') {
+        // Check if any search params are empty
+        if (hasEmptyParams()) {
             setMessage('Please Enter Search Params');
-        // Checks for basic invalid params
-        } else if (isNaN(query.year)|| !isNaN(query.semester) || isNaN(query.studentId)) {
-            setMessage('Please Enter Valid Params')
-        } else {
-            try {
-                const res =
-                    await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=${query.studentId}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    setEntries(data);
-                    setIsDataFetched(true);
-                } else {
-                    const resFail = await res.json();
-                    setMessage(resFail.message);
-                }
-            } catch (err) {
-                setMessage("Error: " + err);
-            }
+            return;
         }
+
+        // Check if search params are valid
+        if (!areParamsValid()) {
+            setMessage('Please Enter Valid Params');
+            return;
+        }
+
+        try {
+            const enrollments = await getEnrollments();
+            setEntries(enrollments);
+            setIsDataFetched(true);
+        } catch (error) {
+            setMessage("Error: " + error);
+        }
+    }
+
+    const hasEmptyParams = () => {
+        return query.year === '' || query.semester === '' || query.studentId === '';
+    }
+
+    const areParamsValid = () => {
+        return !isNaN(query.year) && isNaN(query.semester) && !isNaN(query.studentId);
+    }
+
+    const getEnrollments = async () => {
+        const response = await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=${query.studentId}`);
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message);
+        }
+        return response.json();
     }
 
     const editChange = (event) => {
@@ -59,13 +74,7 @@ const ScheduleView = (props) => {
 
     const dropClass = async (enrollmentId) => {
         try {
-            const res = await fetch(`${SERVER_URL}/enrollments/${enrollmentId}`,
-                {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+            const res = await deleteEntry(enrollmentId);
             if (res.ok) {
                 setMessage("Dropped Class");
                 await fetchSchedule();
@@ -76,6 +85,16 @@ const ScheduleView = (props) => {
         } catch (err) {
             setMessage('DROP ERROR: ' + err);
         }
+    }
+
+    const deleteEntry = async (enrollmentId) => {
+        return fetch(`${SERVER_URL}/enrollments/${enrollmentId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
     }
 
     const dropConfirmation = (event) => {
@@ -95,6 +114,8 @@ const ScheduleView = (props) => {
             ]
         });
     }
+
+
 
     return(
         < > 
