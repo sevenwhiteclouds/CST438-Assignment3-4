@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import {confirmAlert} from "react-confirm-alert";
 import AssignmentUpdate from './AssignmentUpdate';
+import AssignmentAdd from "./AssignmentAdd";
 import {SERVER_URL} from "../../Constants";
 
 // instructor views assignments for their section
@@ -23,7 +24,7 @@ const AssignmentsView = (props) => {
     const location = useLocation();
     const {secNo, courseId, secId} = location.state;
 
-    const headers = ['Assignment Id', 'Title', 'Due Date', 'Course Id', 'Section Id', 'Section Number', '', ''];
+    const headers = ['Assignment Id', 'Title', 'Due Date', '', ''];
 
     const fetchAssignments = async () => {
         if (!secNo) return;
@@ -117,6 +118,28 @@ const AssignmentsView = (props) => {
             setMessage("network error: " + err);
         }
     }
+
+    const addAssignment = async (assignment) => {
+        try {
+            const response = await fetch (`${SERVER_URL}/assignments`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(assignment),
+                });
+            if (response.ok) {
+                setMessage("Assignment added")
+                fetchAssignments();
+            } else {
+                const rc = await response.json();
+                setMessage(rc.message);
+            }
+        } catch (err) {
+            setMessage("network error: "+err);
+        }
+    }
      
     return(
         <> 
@@ -134,16 +157,13 @@ const AssignmentsView = (props) => {
                            <td>{assignment.id}</td>
                            <td>{assignment.title}</td>
                            <td>{assignment.dueDate}</td>
-                           <td>{assignment.courseId}</td>
-                           <td>{assignment.secId}</td>
-                           <td>{assignment.secNo}</td>
                            <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
                            <td><Button onClick={deleteAlert}>Delete</Button></td>
                        </tr>
                    )}
                </tbody>
            </table>
-
+            <AssignmentAdd save={addAssignment()} />
         </>
     );
 }
