@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {SERVER_URL} from "../../Constants";
+import Button from "@mui/material/Button";
+import {confirmAlert} from "react-confirm-alert";
 
 // student can view schedule of sections 
 // use the URL /enrollment?studentId=3&year= &semester=
@@ -9,14 +11,15 @@ import {SERVER_URL} from "../../Constants";
 // to drop a course 
 // issue a DELETE with URL /enrollment/{enrollmentId}
 
-// TODO: Add Checks
+// TODO: Consider reducing how much info is given.
 
 const ScheduleView = (props) => {
 
-    const headers = ['EnrollmentId', 'CourseId', 'Title', 'Credits', 'Email', 'SecId', 'SecNo', 'Building',
-        'Room', 'Times', 'Year', 'Sem', 'ID', 'Name', 'Grade'];
+    const headers = ['EnrollmentId', 'CourseId', 'Title', 'Credits', 'SecId', 'SecNo', 'Building',
+        'Room', 'Times', 'Year', 'Sem', 'ID', 'Email', 'Name', 'Grade', ''];
 
-    const [query, setQuery] = useState({year:'', semester:'', studentId:''});
+    // TODO: Change StudentId Once Login is Implemented.
+    const [query, setQuery] = useState({year:'', semester:'', studentId:3});
 
     const [entries, setEntries] = useState([]);
 
@@ -25,24 +28,72 @@ const ScheduleView = (props) => {
     let [isDataFetched, setIsDataFetched] = useState(false);
 
     const fetchSchedule = async () => {
-        try {
-            const response =
-                await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=3`);
-            if (response.ok) {
-                const data = await response.json();
-                setEntries(data);
-                setIsDataFetched(true);
-            } else {
-                const rc = await response.json();
-                setMessage(rc.message);
+        // Checks for empty params
+        if (query.year === '' || query.semester === '' || query.studentId === '') {
+            setMessage('Please Enter Search Params');
+        // Checks for basic invalid params
+        } else if (isNaN(query.year)|| !isNaN(query.semester) || isNaN(query.studentId)) {
+            setMessage('Please Enter Valid Params')
+        } else {
+            try {
+                const res =
+                    await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=${query.studentId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setEntries(data);
+                    setIsDataFetched(true);
+                } else {
+                    const resFail = await res.json();
+                    setMessage(resFail.message);
+                }
+            } catch (err) {
+                setMessage("Error: " + err);
             }
-        } catch (err) {
-            setMessage("Error: " + err);
         }
     }
 
     const editChange = (event) => {
-        setQuery({...query, [event.target.name]:event.target.value});
+        // Think of this like {name: 'Value'}
+        setQuery({...query, [event.target.name]: event.target.value});
+    }
+
+    const dropClass = async (enrollmentId) => {
+        try {
+            const res = await fetch(`${SERVER_URL}/enrollments/${enrollmentId}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+            if (res.ok) {
+                setMessage("Dropped Class");
+                await fetchSchedule();
+            } else {
+                const resFail = await res.json();
+                setMessage(resFail.message);
+            }
+        } catch (err) {
+            setMessage('DROP ERROR: ' + err);
+        }
+    }
+
+    const dropConfirmation = (event) => {
+        const row_idx = event.target.parentNode.parentNode.rowIndex - 1;
+        const enrollmentId = entries[row_idx].enrollmentId;
+        confirmAlert({
+            title: 'Confirm Course Drop',
+            message: "Do you really want to drop this course?",
+            buttons: [
+                {
+                    label: 'Confirm',
+                    onClick: () => dropClass(enrollmentId)
+                },
+                {
+                    label: 'Cancel'
+                }
+            ]
+        });
     }
 
     return(
@@ -64,8 +115,7 @@ const ScheduleView = (props) => {
             </table>
 
             <br/>
-
-            <button type="submit" id="query" onClick={fetchSchedule}>Search</button>
+            <Button type="submit" id="query" onClick={fetchSchedule}>Search</Button>
 
             <br/>
             <br/>
@@ -83,7 +133,6 @@ const ScheduleView = (props) => {
                             <td>{e.courseId}</td>
                             <td>{e.title}</td>
                             <td>{e.credits}</td>
-                            <td>{e.email}</td>
                             <td>{e.sectionId}</td>
                             <td>{e.sectionNo}</td>
                             <td>{e.building}</td>
@@ -92,8 +141,10 @@ const ScheduleView = (props) => {
                             <td>{e.year}</td>
                             <td>{e.semester}</td>
                             <td>{e.studentId}</td>
+                            <td>{e.email}</td>
                             <td>{e.name}</td>
                             <td>{(e.grade !== null) ? e.grade : 'IP'}</td>
+                            <td><Button onClick={dropConfirmation}>Drop</Button></td>
                         </tr>
                     ))}
                     </tbody>
