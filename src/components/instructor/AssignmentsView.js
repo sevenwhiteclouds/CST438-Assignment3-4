@@ -23,7 +23,7 @@ const AssignmentsView = (props) => {
     const [message, setMessage] = useState('');
 
     const location = useLocation();
-    const {secNo, courseId, secId} = location.state;
+    const {secNo} = location.state;
     //const secNo = 8; //(MB for testing)
 
     const headers = ['Assignment Id', 'Title', 'Due Date', '', '', ''];
@@ -46,7 +46,7 @@ const AssignmentsView = (props) => {
 
     useEffect( () => {
         fetchAssignments();
-    }, [] );
+    }, [secNo] );
 
     const deleteAlert = (event) => {
         confirmAlert({
