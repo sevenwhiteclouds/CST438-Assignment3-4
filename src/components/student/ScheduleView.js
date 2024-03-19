@@ -29,6 +29,10 @@ const ScheduleView = (props) => {
     const [isDataFetched, setIsDataFetched] = useState(false);
 
     const fetchSchedule = async () => {
+
+        // Resets message so messages don't linger longer than they should
+        setMessage('');
+
         // Check if any search params are empty
         if (hasEmptyParams()) {
             setMessage('Please Enter Search Params');
