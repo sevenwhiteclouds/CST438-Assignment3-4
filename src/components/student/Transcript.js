@@ -50,7 +50,7 @@ const Transcript = (props) => {
                         <td>{t.sectionId}</td>
                         <td>{t.title}</td>
                         <td>{t.credits}</td>
-                        <td>{t.grade}</td>
+                        <td>{(t.grade !== 'NULL') ? t.grade : ''}</td>
                     </tr>
                 ))}
                 </tbody>
