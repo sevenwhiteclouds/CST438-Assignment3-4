@@ -1,71 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 //  instructor updates assignment title, dueDate 
 //  use an mui Dialog
 //  issue PUT to URL  /assignments with updated assignment
 
-// TODO 1: update duedate field to a picker and not a textfield
 const AssignmentUpdate = (props)  => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-    const [assignment, updateAssignment] = useState({
-        id: props.assignment.id,
-        secId: props.assignment.secId,
-        secNo: props.assignment.secNo,
-        courseId: props.assignment.courseId,
-        title: props.assignment.title, 
-        dueDate: props.assignment.dueDate,
-    });
+    const [newTitle, setNewTitle] = useState('');
+    const [newDate, setNewDate] = useState('');
 
-    function openFlagTrue() {
-        setOpen(true);
-    }
+    const [assignment, setAssignment] = useState(null);
 
-    // TODO 2: after todo 1 is done, check for correct range date
-    function save() {
-        if (assignment.title === null) {
-            setMessage('Title cannot be empty');
-        } else if (assignment.title.trim().length === 0) {
-            setMessage('Title cannot be empty');
-        } else if (assignment.title.trim().length > 45) {
-            setMessage('Title cannot be more than 45 characters');
-        } else {
+    useEffect(() => {
+        // don't do anything if it's first time
+        if (assignment !== null) {
             props.save(assignment);
-            close();
+            onClose();
+        }
+    }, [assignment]);
+
+    function save() {
+        if (newTitle === null || newDate === null) {
+            setMessage('Title or date cannot be empty');
+        } else if (newTitle.trim().length === 0 || newDate.trim().length === 0) {
+            setMessage('Title or date cannot be empty');
+        } else if (newTitle.trim().length > 45) {
+            setMessage('Title cannot be more than 45 characters');
+        } else if (newDate.trim().length !== 'YYYY-MM-DD'.length) {
+            setMessage('Incomplete date');
+        } else {
+            // TODO: change backend response for when out of date range
+            setAssignment({
+                ...props.assignment,
+                title: newTitle.trim(),
+                dueDate: newDate.trim(),
+            });
         }
     }
 
-    function close() {
+    function onClose() {
         setMessage('');
+        setNewTitle('');
+        setNewDate('');
         setOpen(false);
     }
-    
-    function changes(event) {
-        updateAssignment({...assignment, [event.target.name]:event.target.value});
+
+    function onOpen() {
+        setNewTitle(props.assignment.title);
+        setNewDate(props.assignment.dueDate);
+        setOpen(true);
     }
 
     return (
         <>
-          <Button onClick={openFlagTrue}>Edit</Button>
+          <Button onClick={onOpen}>Edit</Button>
 
           <Dialog open={open}>
             <DialogTitle>Edit Assignment</DialogTitle>
 
             <DialogContent style={{paddingTop: 20}}>
                 <h4>{message}</h4>
-                <TextField style={{padding:10}} fullWidth label="Title" name="title" value={assignment.title} onChange={changes}/> 
-                <TextField style={{padding:10}} fullWidth label="Due Date" name="dueDate" value={assignment.dueDate} onChange={changes}/> 
+                
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                        <TextField 
+                            fullWidth
+                            label="Title"
+                            name="title"
+                            defaultValue={props.assignment.title}
+                            onChange={e => setNewTitle(e.target.value)}
+                        />
+
+                        <DatePicker
+                            label="Due Date"
+                            defaultValue={(dayjs(props.assignment.dueDate))}
+                            onChange={e => setNewDate(dayjs(e.toString()).format('YYYY-MM-DD'))}
+                        />
+                    </DemoContainer>
+                </LocalizationProvider>
             </DialogContent>
 
             <DialogActions>
                 <Button color='primary' onClick={save}>Save</Button>
-                <Button color='secondary' onClick={close}>Close</Button>
+                <Button color='secondary' onClick={onClose}>Close</Button>
             </DialogActions>
           </Dialog>
         </>
