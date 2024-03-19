@@ -83,7 +83,7 @@ const AssignmentGrade = (props) => {
                         <td>{g.studentEmail}</td>
                         {/*<td>{g.score}</td>*/}
                         <td>
-                            <input type="text" name="score" value={(g.score === null) ? '' : g.score} onChange={(event) => onScoreChange(event, g.gradeId)} />
+                            <input type="number" name="score" min="0" max="100" value={(g.score === null) ? '' : g.score} onChange={(event) => onScoreChange(event, g.gradeId)} />
                         </td>
                         <td>
                         <DialogActions>
