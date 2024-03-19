@@ -36,8 +36,19 @@ const AssignmentGrade = (props) => {
     }, [props.assignment.id] );
 
     const onScoreChange = (event, gradeId) => {
-        setGrades(grades.map(grade =>
-            grade.gradeId === gradeId ? {...grade, score: event.target.value} : grade));
+
+        // Ensures input is in range of 0 - 100; Consider cleaning this up
+        if (event.target.value > 100) {
+            setGrades(grades.map(grade =>
+                grade.gradeId === gradeId ? {...grade, score: 100} : grade))
+        } else if (event.target.value < 0) {
+            setGrades(grades.map(grade =>
+                grade.gradeId === gradeId ? {...grade, score: 0} : grade))
+        } else {
+            setGrades(grades.map(grade =>
+                grade.gradeId === gradeId ? {...grade, score: event.target.value} : grade))
+        }
+
     }
 
     const onSave = async () => {
