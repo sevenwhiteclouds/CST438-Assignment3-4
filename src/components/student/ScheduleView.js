@@ -12,7 +12,6 @@ import {confirmAlert} from "react-confirm-alert";
 // issue a DELETE with URL /enrollment/{enrollmentId}
 
 // TODO: Consider reducing how much info is given.
-// TODO: When a class has a grade, it will not drop.
 
 const ScheduleView = (props) => {
 
@@ -104,10 +103,26 @@ const ScheduleView = (props) => {
     const dropConfirmation = (event) => {
         const row_idx = event.target.parentNode.parentNode.rowIndex - 1;
         const enrollmentId = entries[row_idx].enrollmentId;
-        confirmAlert({
+        const grade = entries[row_idx].grade;
+
+        // If statement which changes what confirmationOptions hold depending on if the class is graded or not.
+        const confirmationOptions = (grade !== null && grade !== "NULL") ?
+        {
+            title: 'No Can Do!',
+            message: "This course is already graded",
+            buttons:
+            [
+                {
+                    label: 'Close'
+                }
+            ]
+        }
+        :
+        {
             title: 'Confirm Course Drop',
             message: "Do you really want to drop this course?",
-            buttons: [
+            buttons:
+            [
                 {
                     label: 'Confirm',
                     onClick: () => dropClass(enrollmentId)
@@ -116,9 +131,10 @@ const ScheduleView = (props) => {
                     label: 'Cancel'
                 }
             ]
-        });
-    }
+        };
 
+       confirmAlert(confirmationOptions);
+    }
 
 
     return(
