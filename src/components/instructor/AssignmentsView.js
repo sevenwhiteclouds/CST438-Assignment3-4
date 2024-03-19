@@ -118,11 +118,6 @@ const AssignmentsView = (props) => {
     }
 
     const addAssignment = async (assignment) => {
-        // need to also send section id and secno to backend
-        assignment.secId = assignments[0].secId;
-        assignment.secNo = assignments[0].secNo;
-        assignment.courseId = assignments[0].courseId;
-
         try {
             const response = await fetch (`${SERVER_URL}/assignments`,
                 {
@@ -181,7 +176,7 @@ const AssignmentsView = (props) => {
                     )}
                     </tbody>
                 </table>
-                <AssignmentAdd save={addAssignment}/> </div>
+                <AssignmentAdd exampleAssignment={assignments[0]} save={addAssignment}/> </div>
             }
         </>
     );
