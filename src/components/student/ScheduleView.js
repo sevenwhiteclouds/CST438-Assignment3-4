@@ -26,7 +26,7 @@ const ScheduleView = (props) => {
 
     const [message, setMessage] = useState('');
 
-    let [isDataFetched, setIsDataFetched] = useState(false);
+    const [isDataFetched, setIsDataFetched] = useState(false);
 
     const fetchSchedule = async () => {
         // Check if any search params are empty
@@ -164,7 +164,7 @@ const ScheduleView = (props) => {
                             <td>{e.studentId}</td>
                             <td>{e.email}</td>
                             <td>{e.name}</td>
-                            <td>{(e.grade !== null) ? e.grade : 'IP'}</td>
+                            <td>{(e.grade === 'NULL' || e.grade === null) ? 'IP' : e.grade}</td>
                             <td><Button onClick={dropConfirmation}>Drop</Button></td>
                         </tr>
                     ))}
