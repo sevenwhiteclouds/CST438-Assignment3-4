@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {Link, useLocation} from "react-router-dom";
 import {SERVER_URL} from "../../Constants";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import usersView from "../admin/UsersView";
 
 // instructor enters students' grades for an assignment
 // fetch the grades using the URL /assignment/{id}/grades
@@ -37,7 +35,35 @@ const AssignmentGrade = (props) => {
         fetchGrades();
     }, [props.assignment.id] );
 
+    const onScoreChange = (event, gradeId) => {
+        setGrades(grades.map(grade =>
+            grade.gradeId === gradeId ? {...grade, score: event.target.value} : grade));
+    }
 
+    const onSave = async () => {
+        saveGrade(grades);
+    }
+
+    const saveGrade = async (grades) => {
+        try {
+            const response = await fetch (`${SERVER_URL}/grades`,
+                {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(grades),
+                });
+            if (response.ok) {
+                setMessage("Grade saved");
+            } else {
+                const rc = await response.json();
+                setMessage(rc.message);
+            }
+        } catch (err) {
+            setMessage("network error: "+err);
+        }
+    }
 
     return(
         <>
@@ -56,6 +82,10 @@ const AssignmentGrade = (props) => {
                         <td>{g.studentName}</td>
                         <td>{g.studentEmail}</td>
                         {/*<td>{g.score}</td>*/}
+                        <td><input type="text" name="score" value={g.score} onChange={(event) => onScoreChange(event, g.gradeId)} /></td>
+                        <DialogActions>
+                            <Button onClick={onSave}>Update</Button>
+                        </DialogActions>
                     </tr>
                 )}
                 </tbody>
