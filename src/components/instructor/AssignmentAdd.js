@@ -1,76 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 // complete the code.
 // instructor adds an assignment to a section
 // use mui Dialog with assignment fields Title and DueDate
 // issue a POST using URL /assignments to add the assignment
 
-// TODO 1: update duedate field to a picker and not a textfield
 const AssignmentAdd = (props)  => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-    const [newAssignment, setNewAssignment] = useState({
-        id: 0,
-        secId: 0,
-        secNo: 0,
-        courseId: '',
-        title: '', 
-        dueDate: '',
-    });
+    const [newTitle, setNewTitle] = useState('');
+    const [newDate, setNewDate] = useState('');
 
-    function openFlagTrue() {
-        setOpen(true);
-    }
+    const [newAssignment, setNewAssignment] = useState(null);
 
-    // TODO 2: after todo 1 is done, check for correct range date
-    function save() {
-        if (newAssignment.title === null) {
-            setMessage('Title cannot be empty');
-        } else if (newAssignment.title.trim().length === 0) {
-            setMessage('Title cannot be empty');
-        } else if (newAssignment.title.trim().length > 45) {
-            setMessage('Title cannot be more than 45 characters');
-        } else {
+    useEffect(() => {
+        // don't do anything if it's first time
+        if (newAssignment !== null) {
             props.save(newAssignment);
             close();
+        }
+    }, [newAssignment]);
+
+
+    function save() {
+        if (newTitle === null || newDate === null) {
+            setMessage('Title or date cannot be empty');
+        } else if (newTitle.trim().length === 0 || newDate.trim().length === 0) {
+            setMessage('Title or date cannot be empty');
+        } else if (newTitle.trim().length > 45) {
+            setMessage('Title cannot be more than 45 characters');
+        } else if (newDate.trim().length !== 'YYYY-MM-DD'.length) {
+            setMessage('Incomplete date');
+        } else {
+            // TODO: change backend response for when out of date range
+            setNewAssignment({
+                ...props.exampleAssignment,
+                title: newTitle.trim(),
+                dueDate: newDate.trim(),
+            });
         }
     }
 
     function close() {
         setMessage('');
-        setNewAssignment({
-            id: 0,
-            secId: 0,
-            secNo: 0,
-            courseId: '',
-            title: '', 
-            dueDate: '',
-        });
-
+        setNewTitle('');
+        setNewDate('');
         setOpen(false);
-    }
-
-    function changes(event) {
-        setNewAssignment({...newAssignment, [event.target.name]:event.target.value});
     }
 
     return (
         <>
-          <Button onClick={openFlagTrue}>Add Assignment</Button>
+          <Button onClick={() => setOpen(true)}>Add Assignment</Button>
 
           <Dialog open={open}>
             <DialogTitle>Add Assignment</DialogTitle>
 
             <DialogContent style={{paddingTop: 20}}>
                 <h4>{message}</h4>
-                <TextField style={{padding:10}} fullWidth label="Title" name="title"  onChange={changes}/>
-                <TextField style={{padding:10}} fullWidth label="Due Date" name="dueDate" onChange={changes}/>
+                
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                        <TextField
+                            fullWidth
+                            label="Title"
+                            name="title"
+                            onChange={e => setNewTitle(e.target.value)}
+                        />
+
+                        <DatePicker
+                            label="Due Date"
+                            onChange={e => setNewDate(dayjs(e.toString()).format('YYYY-MM-DD'))}
+                        />
+                    </DemoContainer>
+                </LocalizationProvider>
             </DialogContent>
 
             <DialogActions>
