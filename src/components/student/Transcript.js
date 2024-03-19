@@ -29,7 +29,7 @@ const Transcript = (props) => {
 
     useEffect( () => {
         fetchTranscript();
-    }, 3);
+    }, []);
 
     return(
         <>
