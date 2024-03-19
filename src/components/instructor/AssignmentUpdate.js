@@ -18,9 +18,9 @@ const AssignmentUpdate = (props)  => {
         id: props.assignment.id,
         secId: props.assignment.secId,
         secNo: props.assignment.secNo,
-        courseId:props.assignment.courseId,
-        title: '', 
-        dueDate: '',
+        courseId: props.assignment.courseId,
+        title: props.assignment.title, 
+        dueDate: props.assignment.dueDate,
     });
 
     function openFlagTrue() {
@@ -42,7 +42,6 @@ const AssignmentUpdate = (props)  => {
     }
 
     function close() {
-        updateAssignment({...assignment, title: '', dueDate: ''});
         setMessage('');
         setOpen(false);
     }
