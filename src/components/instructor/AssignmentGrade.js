@@ -82,10 +82,14 @@ const AssignmentGrade = (props) => {
                         <td>{g.studentName}</td>
                         <td>{g.studentEmail}</td>
                         {/*<td>{g.score}</td>*/}
-                        <td><input type="text" name="score" value={g.score} onChange={(event) => onScoreChange(event, g.gradeId)} /></td>
+                        <td>
+                            <input type="text" name="score" value={(g.score === null) ? '' : g.score} onChange={(event) => onScoreChange(event, g.gradeId)} />
+                        </td>
+                        <td>
                         <DialogActions>
                             <Button onClick={onSave}>Update</Button>
                         </DialogActions>
+                        </td>
                     </tr>
                 )}
                 </tbody>
