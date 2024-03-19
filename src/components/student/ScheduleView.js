@@ -11,11 +11,9 @@ import {confirmAlert} from "react-confirm-alert";
 // to drop a course 
 // issue a DELETE with URL /enrollment/{enrollmentId}
 
-// TODO: Consider reducing how much info is given.
-
 const ScheduleView = (props) => {
 
-    const headers = ['EnrollmentId', 'CourseId', 'Title', 'Credits', 'SecId', 'SecNo', 'Building',
+    const headers = ['CourseId', 'Title', 'Credits', 'SecId', 'SecNo', 'Building',
         'Room', 'Times', 'Year', 'Sem', 'ID', 'Email', 'Name', 'Grade', ''];
 
     // TODO: Change StudentId Once Login is Implemented.
@@ -170,7 +168,6 @@ const ScheduleView = (props) => {
                     <tbody>
                     {entries.map((e) => (
                         <tr key={e.enrollmentId}>
-                            <td>{e.enrollmentId}</td>
                             <td>{e.courseId}</td>
                             <td>{e.title}</td>
                             <td>{e.credits}</td>
