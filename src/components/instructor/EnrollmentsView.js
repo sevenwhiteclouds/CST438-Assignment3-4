@@ -40,8 +40,13 @@ const EnrollmentsView = (props) => {
     }, [secNo])
 
     const onGradeChange = (event, enrollmentId) => {
-        setEnrollments(enrollments.map(enrollment =>
-            enrollment.enrollmentId === enrollmentId ? {...enrollment, grade: event.target.value} : enrollment));
+        const letters = /^[A-Za-z+-]*$/;
+        if (event.target.value.match(letters)){
+            setEnrollments(enrollments.map(enrollment =>
+                enrollment.enrollmentId === enrollmentId ? {...enrollment, grade: event.target.value} : enrollment));
+        } else {
+            setMessage("Only single letters are allowed.")
+        }
     }
 
     const saveEnrollment = async (enrollments) => {
