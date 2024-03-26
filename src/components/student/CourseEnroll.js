@@ -55,9 +55,11 @@ const CourseEnroll = (props) => {
             buttons: [
                 {
                     label: 'Confirm',
+                    id: "confirmOption",
                     onClick: () => addEnrollment(secNo)
                 },
                 {
+                    id: "cancelOption",
                     label: 'Cancel'
                 }
             ]
@@ -91,7 +93,7 @@ const CourseEnroll = (props) => {
     return(
         <>
            <h3>Available Sections:</h3>
-            <h4>{message}</h4>
+            <h4 id="msg">{message}</h4>
 
             <table className="Center">
                 <thead>
@@ -112,7 +114,7 @@ const CourseEnroll = (props) => {
                         <td>{h.times}</td>
                         <td>{h.instructorName}</td>
                         <td>{h.instructorEmail}</td>
-                        <td><Button onClick={addEnrollmentConfirmation}>Add</Button></td>
+                        <td><Button id={"enrollButton-" + h.secNo} onClick={addEnrollmentConfirmation}>Add</Button></td>
                     </tr>
                 ))}
                 </tbody>
