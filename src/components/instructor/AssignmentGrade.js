@@ -79,7 +79,7 @@ const AssignmentGrade = (props) => {
     return(
         <>
             <h3>Assignment Grades</h3>
-            <h4>{message}</h4>
+            <h4 id="addMessage">{message}</h4>
             <table className="Center">
                 <thead>
                 <tr>
@@ -98,7 +98,7 @@ const AssignmentGrade = (props) => {
                         </td>
                         <td>
                         <DialogActions>
-                            <Button onClick={onSave}>Update</Button>
+                            <Button id="updateButton" onClick={onSave}>Update</Button>
                         </DialogActions>
                         </td>
                     </tr>

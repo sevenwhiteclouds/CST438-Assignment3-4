@@ -146,7 +146,7 @@ const AssignmentsView = (props) => {
 
             {showGrades
                 ? <div>
-                    <Button onClick={() => {
+                    <Button id="backButton" onClick={() => {
                         setShowGrades(!showGrades);
                         setCurrentAssignment(null);
                     }}>Back</Button>
