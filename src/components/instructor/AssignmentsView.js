@@ -176,7 +176,14 @@ const AssignmentsView = (props) => {
                     )}
                     </tbody>
                 </table>
-                <AssignmentAdd exampleAssignment={assignments[0]} save={addAssignment}/> </div>
+                <AssignmentAdd assignment={{
+                    id: 0,
+                    title: '',
+                    dueDate: '',
+                    courseId: location.state.courseId,
+                    secId: location.state.secId,
+                    secNo: location.state.secNo
+                }} save={addAssignment}/> </div>
             }
         </>
     );

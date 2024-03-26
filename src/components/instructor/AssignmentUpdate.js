@@ -41,7 +41,6 @@ const AssignmentUpdate = (props)  => {
         } else if (newDate.trim().length !== 'YYYY-MM-DD'.length) {
             setMessage('Incomplete date');
         } else {
-            // TODO: change backend response for when out of date range
             setAssignment({
                 ...props.assignment,
                 title: newTitle.trim(),
