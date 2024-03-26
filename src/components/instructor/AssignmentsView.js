@@ -165,7 +165,7 @@ const AssignmentsView = (props) => {
                             <td>{assignment.title}</td>
                             <td>{assignment.dueDate}</td>
                             <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
-                            <td><Button onClick={deleteAlert}>Delete</Button></td>
+                            <td><Button id="deleteButton" onClick={deleteAlert}>Delete</Button></td>
                             {/*<td><AssignmentGrade assignment={assignment}/></td>*/}
                             <td><Button id="showGrades" onClick={() => {
                                 setShowGrades(!showGrades);
@@ -178,8 +178,8 @@ const AssignmentsView = (props) => {
                 </table>
                 <AssignmentAdd assignment={{
                     id: 0,
-                    title: '',
-                    dueDate: '',
+                    title: "",
+                    dueDate: "",
                     courseId: location.state.courseId,
                     secId: location.state.secId,
                     secNo: location.state.secNo

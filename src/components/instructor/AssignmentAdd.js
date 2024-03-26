@@ -60,7 +60,7 @@ const AssignmentAdd = (props)  => {
 
     return (
         <>
-          <Button onClick={() => setOpen(true)}>Add Assignment</Button>
+          <Button  id='addNewAssignmentButton' onClick={() => setOpen(true)}>Add Assignment</Button>
 
           <Dialog open={open}>
             <DialogTitle>Add Assignment</DialogTitle>
@@ -72,21 +72,23 @@ const AssignmentAdd = (props)  => {
                     <DemoContainer components={['DatePicker']}>
                         <TextField
                             fullWidth
-                            label="Title"
-                            name="title"
+                            label='Title'
+                            name='title'
                             onChange={e => setNewTitle(e.target.value)}
                         />
 
-                        <DatePicker
-                            label="Due Date"
-                            onChange={e => setNewDate(dayjs(e.toString()).format('YYYY-MM-DD'))}
-                        />
+                        <div id='datePickerField'>
+                            <DatePicker
+                                label='Due Date'
+                                onChange={e => setNewDate(dayjs(e.toString()).format('YYYY-MM-DD'))}
+                            />
+                        </div>
                     </DemoContainer>
                 </LocalizationProvider>
             </DialogContent>
 
             <DialogActions>
-                <Button color='primary' onClick={save}>Save</Button>
+                <Button id='saveButton' color='primary' onClick={save}>Save</Button>
                 <Button color='secondary' onClick={close}>Close</Button>
             </DialogActions>
           </Dialog>

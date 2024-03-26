@@ -76,14 +76,14 @@ const AssignmentUpdate = (props)  => {
                     <DemoContainer components={['DatePicker']}>
                         <TextField 
                             fullWidth
-                            label="Title"
-                            name="title"
+                            label='Title'
+                            name='title'
                             defaultValue={props.assignment.title}
                             onChange={e => setNewTitle(e.target.value)}
                         />
 
                         <DatePicker
-                            label="Due Date"
+                            label='Due Date'
                             defaultValue={(dayjs(props.assignment.dueDate))}
                             onChange={e => setNewDate(dayjs(e.toString()).format('YYYY-MM-DD'))}
                         />
