@@ -167,7 +167,7 @@ const AssignmentsView = (props) => {
                             <td><AssignmentUpdate assignment={assignment} save={onSave}/></td>
                             <td><Button onClick={deleteAlert}>Delete</Button></td>
                             {/*<td><AssignmentGrade assignment={assignment}/></td>*/}
-                            <td><Button onClick={() => {
+                            <td><Button id="showGrades" onClick={() => {
                                 setShowGrades(!showGrades);
                                 setCurrentAssignment(assignment);
                             }}>Show Grades</Button></td>
