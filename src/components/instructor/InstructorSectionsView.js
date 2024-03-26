@@ -67,7 +67,7 @@ const InstructorSectionsView = (props) => {
                             <Link id="viewAssignments" to="/assignments" state={section}>View Assignments</Link>
                         </td>
                         <td>
-                            <Link to="/enrollments" state={section}>View Enrollments</Link>
+                            <Link id="viewEnrollments" to="/enrollments" state={section}>View Enrollments</Link>
                         </td>
                     </tr>
                 ))}

@@ -77,7 +77,7 @@ const EnrollmentsView = (props) => {
     return(
         <>
             <h3>Enrollments</h3>
-            <h4>{message}</h4>
+            <h4 id="e_message">{message}</h4>
             <table className="Center">
                 <thead>
                 <tr>
@@ -92,11 +92,11 @@ const EnrollmentsView = (props) => {
                         <td>{e.name}</td>
                         <td>{e.email}</td>
                         <td>
-                            <input type="text" name="grade" value={(e.grade === null) ? '' : e.grade} onChange={(event) => onGradeChange(event, e.enrollmentId)} />
+                            <input type="text" id="grade" name="grade" value={(e.grade === null) ? '' : e.grade} onChange={(event) => onGradeChange(event, e.enrollmentId)} />
                         </td>
                         <td>
                         <DialogActions>
-                            <Button onClick={onSave}>Update</Button>
+                            <Button id="update" onClick={onSave}>Update</Button>
                         </DialogActions>
                         </td>
                     </tr>
