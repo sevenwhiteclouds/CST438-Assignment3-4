@@ -10,7 +10,8 @@ import {confirmAlert} from "react-confirm-alert";
 
 // to drop a course 
 // issue a DELETE with URL /enrollment/{enrollmentId}
-
+// TODO:1 When all enrollments are removed, an error code is shown because fetchSchedule throws an error code
+// TODO:2 Since its empty. Consider working with local data instead of fetching.
 const ScheduleView = (props) => {
 
     const headers = ['CourseId', 'Title', 'Credits', 'SecId', 'SecNo', 'Building',
@@ -47,7 +48,8 @@ const ScheduleView = (props) => {
             setEntries(enrollments);
             setIsDataFetched(true);
         } catch (error) {
-            setMessage("Error: " + error);
+            setMessage(error.toString());
+            setIsDataFetched(false);
         }
     }
 
@@ -123,6 +125,7 @@ const ScheduleView = (props) => {
             [
                 {
                     label: 'Confirm',
+                    id: "confirm",
                     onClick: () => dropClass(enrollmentId)
                 },
                 {
@@ -138,7 +141,7 @@ const ScheduleView = (props) => {
     return(
         < > 
             <h3>Schedules</h3>
-            <h4>{message}</h4>
+            <h4 id="msg">{message}</h4>
 
             <table className="Center">
                 <tbody>
@@ -165,14 +168,14 @@ const ScheduleView = (props) => {
                         {headers.map((e, idx) => (<th key = {idx}>{e}</th>))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="enrollmentList">
                     {entries.map((e) => (
                         <tr key={e.enrollmentId}>
                             <td>{e.courseId}</td>
                             <td>{e.title}</td>
                             <td>{e.credits}</td>
                             <td>{e.sectionId}</td>
-                            <td>{e.sectionNo}</td>
+                            <td id={"secNo" + e.sectionNo}>{e.sectionNo}</td>
                             <td>{e.building}</td>
                             <td>{e.room}</td>
                             <td>{e.times}</td>
@@ -182,7 +185,7 @@ const ScheduleView = (props) => {
                             <td>{e.email}</td>
                             <td>{e.name}</td>
                             <td>{(e.grade === 'NULL' || e.grade === null) ? 'IP' : e.grade}</td>
-                            <td><Button onClick={dropConfirmation}>Drop</Button></td>
+                            <td><Button onClick={dropConfirmation} id={"drop" + e.sectionNo}>Drop</Button></td>
                         </tr>
                     ))}
                     </tbody>
