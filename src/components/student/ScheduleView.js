@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {SERVER_URL} from "../../Constants";
 import Button from "@mui/material/Button";
 import {confirmAlert} from "react-confirm-alert";
@@ -10,8 +10,7 @@ import {confirmAlert} from "react-confirm-alert";
 
 // to drop a course 
 // issue a DELETE with URL /enrollment/{enrollmentId}
-// TODO:1 When all enrollments are removed, an error code is shown because fetchSchedule throws an error code
-// TODO:2 Since its empty. Consider working with local data instead of fetching.
+
 const ScheduleView = (props) => {
 
     const headers = ['CourseId', 'Title', 'Credits', 'SecId', 'SecNo', 'Building',
@@ -51,6 +50,7 @@ const ScheduleView = (props) => {
             setMessage(error.toString());
             setIsDataFetched(false);
         }
+
     }
 
     const hasEmptyParams = () => {
@@ -75,12 +75,13 @@ const ScheduleView = (props) => {
         setQuery({...query, [event.target.name]: event.target.value});
     }
 
-    const dropClass = async (enrollmentId) => {
+    const dropClass = async (enrollment) => {
         try {
-            const res = await deleteEntry(enrollmentId);
+            const res = await deleteEntry(enrollment.enrollmentId);
             if (res.ok) {
                 setMessage("Dropped Class");
-                await fetchSchedule();
+                const newEntries = (entries => entries.filter(entry => entry !== enrollment));
+                setEntries(newEntries);
             } else {
                 const resFail = await res.json();
                 setMessage(resFail.message);
@@ -102,7 +103,7 @@ const ScheduleView = (props) => {
 
     const dropConfirmation = (event) => {
         const row_idx = event.target.parentNode.parentNode.rowIndex - 1;
-        const enrollmentId = entries[row_idx].enrollmentId;
+        const enrollment = entries[row_idx];
         const grade = entries[row_idx].grade;
 
         // If statement which changes what confirmationOptions hold depending on if the class is graded or not.
@@ -126,7 +127,7 @@ const ScheduleView = (props) => {
                 {
                     label: 'Confirm',
                     id: "confirm",
-                    onClick: () => dropClass(enrollmentId)
+                    onClick: () => dropClass(enrollment)
                 },
                 {
                     label: 'Cancel'
