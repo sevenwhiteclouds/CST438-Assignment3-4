@@ -42,9 +42,10 @@ const AssignmentsStudentView = (props) => {
         }, [term.year, term.semester])
 
         return (
+            < >
+            <h4>{message}</h4>
             <table className="Center">
                 <thead>
-                <tr>{message}</tr>
                 <tr>
                     {headers.map((s, idx) => (<th key={idx}>{s}</th>))}
                 </tr>
@@ -60,6 +61,7 @@ const AssignmentsStudentView = (props) => {
                 ))}
                 </tbody>
             </table>
+            </ >
         );
 
     }
