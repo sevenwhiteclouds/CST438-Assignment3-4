@@ -6,7 +6,7 @@ import {confirmAlert} from "react-confirm-alert";
 import AssignmentUpdate from './AssignmentUpdate';
 import AssignmentAdd from "./AssignmentAdd";
 import AssignmentGrade from "./AssignmentGrade";
-import {SERVER_URL} from "../../Constants";
+import {SERVER_URL_8081} from "../../Constants";
 
 
 // instructor views assignments for their section
@@ -35,7 +35,7 @@ const AssignmentsView = (props) => {
     const fetchAssignments = async () => {
         if (!secNo) return;
         try {
-            const response = await fetch(`${SERVER_URL}/sections/${secNo}/assignments`);
+            const response = await fetch(`${SERVER_URL_8081}/sections/${secNo}/assignments`);
             if (response.ok) {
                 const assignments = await response.json();
                 setAssignments(assignments);
@@ -76,7 +76,7 @@ const AssignmentsView = (props) => {
 
     const deleteAssignment = async (id) => {
         try {
-            const response = await fetch (`${SERVER_URL}/assignments/${id}`,
+            const response = await fetch (`${SERVER_URL_8081}/assignments/${id}`,
                 {
                     method: 'DELETE',
                     headers: {
@@ -97,7 +97,7 @@ const AssignmentsView = (props) => {
 
     const onSave = async (assignment) => {
         try {
-            const response = await fetch(`${SERVER_URL}/assignments`,
+            const response = await fetch(`${SERVER_URL_8081}/assignments`,
                 {
                     method: 'PUT',
                     headers: {
@@ -119,7 +119,7 @@ const AssignmentsView = (props) => {
 
     const addAssignment = async (assignment) => {
         try {
-            const response = await fetch (`${SERVER_URL}/assignments`,
+            const response = await fetch (`${SERVER_URL_8081}/assignments`,
                 {
                     method: 'POST',
                     headers: {

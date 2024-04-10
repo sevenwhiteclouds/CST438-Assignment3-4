@@ -1,4 +1,4 @@
-import {SERVER_URL} from '../../Constants';
+import {SERVER_URL_8081} from '../../Constants';
 import React, {useState, useEffect} from 'react';
 import {Link, useLocation} from "react-router-dom";
 
@@ -25,7 +25,7 @@ const InstructorSectionsView = (props) => {
 
     const fetchCourses = async () => {
         try{
-            const response = await fetch(`${SERVER_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`);
+            const response = await fetch(`${SERVER_URL_8081}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`);
             if (response.ok){
                 const sections = await response.json();
                 setSections(sections);
@@ -80,4 +80,3 @@ const InstructorSectionsView = (props) => {
 }
 
 export default InstructorSectionsView;
-

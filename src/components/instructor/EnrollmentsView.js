@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
-import {SERVER_URL} from "../../Constants";
+import {SERVER_URL_8081} from "../../Constants";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
 
@@ -22,7 +22,7 @@ const EnrollmentsView = (props) => {
 
     const fetchEnrollments = async () => {
         try {
-            const response = await fetch(`${SERVER_URL}/sections/${secNo}/enrollments`);
+            const response = await fetch(`${SERVER_URL_8081}/sections/${secNo}/enrollments`);
             if (response.ok) {
                 const enrollments = await response.json();
                 setEnrollments(enrollments);
@@ -51,7 +51,7 @@ const EnrollmentsView = (props) => {
 
     const saveEnrollment = async (enrollments) => {
         try {
-            const response = await fetch (`${SERVER_URL}/enrollments`,
+            const response = await fetch (`${SERVER_URL_8081}/enrollments`,
                 {
                     method: 'PUT',
                     headers: {
