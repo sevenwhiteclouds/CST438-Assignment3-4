@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {SERVER_URL} from "../../Constants";
+import {SERVER_URL_8081} from "../../Constants";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 
@@ -18,7 +18,7 @@ const AssignmentGrade = (props) => {
 
     const fetchGrades = async  () => {
         try {
-            const response = await fetch(`${SERVER_URL}/assignments/${props.assignment.id}/grades`);
+            const response = await fetch(`${SERVER_URL_8081}/assignments/${props.assignment.id}/grades`);
             if (response.ok) {
                 const grades = await response.json();
                 setGrades(grades);
@@ -57,7 +57,7 @@ const AssignmentGrade = (props) => {
 
     const saveGrade = async (grades) => {
         try {
-            const response = await fetch (`${SERVER_URL}/grades`,
+            const response = await fetch (`${SERVER_URL_8081}/grades`,
                 {
                     method: 'PUT',
                     headers: {
