@@ -23,9 +23,11 @@ const InstructorSectionsView = (props) => {
 
     const [ message, setMessage ] = useState('');
 
+    const jwt = sessionStorage.getItem("jwt");
+
     const fetchCourses = async () => {
         try{
-            const response = await fetch(`${SERVER_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`);
+            const response = await fetch(`${SERVER_URL}/sections?email=dwisneski@csumb.edu&year=${year}&semester=${semester}`, {headers: {"Authorization": jwt}});
             if (response.ok){
                 const sections = await response.json();
                 setSections(sections);
