@@ -13,6 +13,8 @@ import {SERVER_URL} from "../../Constants";
 const AssignmentsStudentView = (props) => {
     const [term, setTerm] = useState({year:'', semester:''});
 
+    const jwt = sessionStorage.getItem("jwt");
+
     const onChange = (event) => {
         setTerm({...term, [event.target.name]:event.target.value});
     }
@@ -24,7 +26,7 @@ const AssignmentsStudentView = (props) => {
 
         const fetchAssignments = async () => {
             try{
-                const response = await fetch(`${SERVER_URL}/assignments?studentId=3&year=${term.year}&semester=${term.semester}`);
+                const response = await fetch(`${SERVER_URL}/assignments?studentId=3&year=${term.year}&semester=${term.semester}`, {headers: {"Authorization": jwt}});
                 if (response.ok){
                     const assignments = await response.json();
                     setAssignments(assignments);
