@@ -32,10 +32,12 @@ const AssignmentsView = (props) => {
 
     const headers = ['Assignment Id', 'Title', 'Due Date', '', '', ''];
 
+    const jwt = sessionStorage.getItem("jwt");
+
     const fetchAssignments = async () => {
         if (!secNo) return;
         try {
-            const response = await fetch(`${SERVER_URL}/sections/${secNo}/assignments`);
+            const response = await fetch(`${SERVER_URL}/sections/${secNo}/assignments`, {headers: {"Authorization": jwt}});
             if (response.ok) {
                 const assignments = await response.json();
                 setAssignments(assignments);
@@ -80,7 +82,7 @@ const AssignmentsView = (props) => {
                 {
                     method: 'DELETE',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', 'Authorization': jwt,
                     },
                 });
             if (response.ok) {
@@ -101,7 +103,7 @@ const AssignmentsView = (props) => {
                 {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', 'Authorization': jwt,
                     },
                     body: JSON.stringify(assignment),
                 });
@@ -123,7 +125,7 @@ const AssignmentsView = (props) => {
                 {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', 'Authorization': jwt,
                     },
                     body: JSON.stringify(assignment),
                 });
