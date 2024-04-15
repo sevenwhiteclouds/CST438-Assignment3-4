@@ -8,14 +8,16 @@ import {SERVER_URL} from '../../Constants';
 
 function CoursesView(props) {
     const headers = ['CourseId', 'Title', 'Credits',  '', ''];
-    
+
+    const jwt = sessionStorage.getItem("jwt");
+
     const [courses, setCourses] = useState([    ]);
 
     const [ message, setMessage ] = useState('');
 
     const  fetchCourses = async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/courses`);
+        const response = await fetch(`${SERVER_URL}/courses`, {headers: {"Authorization": jwt}});
         if (response.ok) {
           const courses = await response.json();
           setCourses(courses);
@@ -38,7 +40,7 @@ function CoursesView(props) {
             {
               method: 'PUT',
               headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 'Authorization': jwt,
               }, 
               body: JSON.stringify(course),
             });
@@ -60,7 +62,7 @@ function CoursesView(props) {
             {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 'Authorization': jwt,
               }, 
               body: JSON.stringify(course),
             });
@@ -82,7 +84,7 @@ function CoursesView(props) {
             {
               method: 'DELETE',
               headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 'Authorization': jwt,
               }, 
             });
         if (response.ok) {
