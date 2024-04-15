@@ -8,6 +8,8 @@ import {SERVER_URL} from '../../Constants';
 
 function SectionsView(props) {
     const headers = ['SecNo', 'CourseId', 'SecId',  'Year', 'Semester', 'Building', 'Room', 'Times', '', ''];
+
+    const jwt = sessionStorage.getItem("jwt");
     
     const [sections, setSections] = useState([]);
 
@@ -20,7 +22,7 @@ function SectionsView(props) {
             setMessage("Enter search parameters");
         } else {
           try {
-            const response = await fetch(`${SERVER_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`);
+            const response = await fetch(`${SERVER_URL}/courses/${search.courseId}/sections?year=${search.year}&semester=${search.semester}`, {headers: {"Authorization": jwt}});
             if (response.ok) {
               const data = await response.json();
               setSections(data);
@@ -40,7 +42,7 @@ function SectionsView(props) {
         {
           method: 'DELETE',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json', 'Authorization': jwt,
           }, 
         });
         if (response.ok) {

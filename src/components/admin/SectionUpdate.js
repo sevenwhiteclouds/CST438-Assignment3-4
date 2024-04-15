@@ -10,6 +10,7 @@ import {SERVER_URL} from '../../Constants';
 const SectionUpdate = (props)  => {
 
     const [open, setOpen] = useState(false);
+    const jwt = sessionStorage.getItem("jwt");
     const [editMessage, setEditMessage] = useState('');
     const [section, setSection] = useState(
         {secNo:'', courseId:'', secId:'', year:'', semester:'', building:'', room:'', times:'',
@@ -45,7 +46,7 @@ const SectionUpdate = (props)  => {
             {
               method: 'PUT',
               headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json', 'Authorization': jwt,
               }, 
               body: JSON.stringify(section),
             });
