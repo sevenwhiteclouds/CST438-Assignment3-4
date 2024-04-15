@@ -21,6 +21,8 @@ const ScheduleView = (props) => {
 
     const [entries, setEntries] = useState([]);
 
+    const jwt = sessionStorage.getItem("jwt");
+
     const [message, setMessage] = useState('');
 
     const [isDataFetched, setIsDataFetched] = useState(false);
@@ -62,7 +64,7 @@ const ScheduleView = (props) => {
     }
 
     const getEnrollments = async () => {
-        const response = await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=${query.studentId}`);
+        const response = await fetch(`${SERVER_URL}/enrollments?year=${query.year}&semester=${query.semester}&studentId=${query.studentId}`, {headers: {"Authorization": jwt}});
         if (!response.ok) {
             const errorResponse = await response.json();
             throw new Error(errorResponse.message);
@@ -96,7 +98,7 @@ const ScheduleView = (props) => {
             {
                 method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json', 'Authorization': jwt,
                 },
             });
     }
