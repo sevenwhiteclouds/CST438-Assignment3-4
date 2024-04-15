@@ -11,10 +11,11 @@ const Transcript = (props) => {
     const headers = ['Year', 'Semester', 'CourseId', 'SectionId', 'Title', 'Credits', 'Grade'];
     const [transcripts, setTranscript] = useState([]);
     const [message, setMessage] = useState('');
+    const jwt = sessionStorage.getItem("jwt");
 
     const fetchTranscript = async  () => {
         try {
-            const response = await fetch(`${SERVER_URL}/transcripts?studentId=3`);
+            const response = await fetch(`${SERVER_URL}/transcripts?studentId=3`, {headers: {"Authorization": jwt}});
             if (response.ok) {
                 const data = await response.json();
                 setTranscript(data);
