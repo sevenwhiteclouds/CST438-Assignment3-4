@@ -8,14 +8,16 @@ import {SERVER_URL} from '../../Constants';
 
 function UsersView(props) {
     const headers = ['ID', 'Name', 'Email', 'Type', '', ''];
-    
+
+    const jwt = sessionStorage.getItem("jwt");
+
     const [users, setUsers] = useState([  ]);
 
     const [message, setMessage] = useState('');
 
     const  fetchUsers = async () => {
       try {
-        const response = await fetch(`${SERVER_URL}/users`);
+        const response = await fetch(`${SERVER_URL}/users`, {headers: {"Authorization": jwt}});
         if (response.ok) {
           const users = await response.json();
           setUsers(users);
@@ -38,8 +40,8 @@ function UsersView(props) {
           {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json',
-            }, 
+              'Content-Type': 'application/json', 'Authorization': jwt,
+            },
             body: JSON.stringify(user),
           });
         if (response.ok) {
@@ -60,7 +62,7 @@ function UsersView(props) {
           {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json', 'Authorization': jwt,
             }, 
             body: JSON.stringify(user),
           });
@@ -83,7 +85,7 @@ function UsersView(props) {
           {
             method: 'DELETE',
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json', 'Authorization': jwt,
             }, 
           });
         if (response.ok) {
